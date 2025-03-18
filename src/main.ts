@@ -50,7 +50,7 @@ async function bootstrap() {
   const PORT = configService.get<number>('port');
 
   // Start the application
-  await app.listen(PORT);
+  await app.listen(PORT || 5056);
 
   // Log a message to indicate that the application is running
   logger.log(`Application listening on port ${PORT}`);
