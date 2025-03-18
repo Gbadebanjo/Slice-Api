@@ -12,7 +12,7 @@ import { StoreReqDto } from './dtos/store.req.dto';
 import { Store } from './schema';
 
 @ApiBearerAuth()
-@ApiTags('User')
+@ApiTags('Store')
 @UseGuards(JwtUserAuthGuard)
 @Controller('store')
 export class StoreController {
