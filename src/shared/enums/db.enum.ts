@@ -4,6 +4,16 @@ export enum DatabaseCollectionNames {
   PROFILE = 'profiles',
   STORE = 'stores',
   PRODUCT = 'products',
+  ABOUT = 'abouts',
+}
+
+export enum DatabaseModelNames {
+  USER = 'User',
+  TOKEN = 'Token',
+  PROFILE = 'Profile',
+  STORE = 'Store',
+  PRODUCT = 'Product',
+  ABOUT = 'About',
 }
 
 export enum TokenTypes {

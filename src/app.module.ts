@@ -25,6 +25,8 @@ import { AuthModule } from './modules/auth/auth.module';
 import { UserModule } from './modules/user/user.module';
 import { TokenModule } from './modules/token/token.module';
 import { StoreModule } from './modules/store/module';
+import { ProductModule } from './modules/products/module';
+// import { AboutModule } from './modules/about/module';
 // import { WorkspaceModule } from './modules/workspace/workspace.module';
 
 // Import other modules
@@ -54,6 +56,8 @@ import { StoreModule } from './modules/store/module';
     UserModule,
     TokenModule,
     StoreModule,
+    ProductModule,
+    // AboutModule,
   ],
   controllers: [AppController], // Define the application's controller
   providers: [

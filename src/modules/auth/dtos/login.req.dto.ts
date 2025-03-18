@@ -2,7 +2,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { IsEmail, IsNotEmpty, IsString, Matches, MaxLength, MinLength } from 'class-validator';
 
 export class LoginReqDto {
-  @ApiProperty({ description: 'Email address of the user', example: 'john@example.com' })
+  @ApiProperty({ description: 'Email address of the user', example: 'oluwagbogoadebanjo@yahoo.com' })
   @IsNotEmpty()
   @IsEmail()
   email: string;
@@ -10,7 +10,7 @@ export class LoginReqDto {
   @ApiProperty({
     description:
       'Password for the user account. Must be at least 8 characters and contain at least one uppercase letter, one lowercase letter, and one special character.',
-    example: 'MySecurePassword!@#',
+    example: 'MySecure@Password!#',
   })
   @IsString()
   @MinLength(8)

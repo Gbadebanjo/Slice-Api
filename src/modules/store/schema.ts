@@ -52,7 +52,6 @@ export class Store {
     example: '643405452324db8c464c0585',
   })
   @Prop({
-    required: true,
     type: Types.ObjectId,
     ref: 'About',
   })
@@ -63,11 +62,10 @@ export class Store {
     example: '643405452324db8c464c0586',
   })
   @Prop({
-    required: true,
     type: Types.ObjectId,
     ref: 'Review',
   })
-  review: Types.ObjectId;
+  review?: Types.ObjectId;
 }
 
 export type StoreDocument = HydratedDocument<Store>;

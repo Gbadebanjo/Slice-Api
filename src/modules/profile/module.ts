@@ -4,7 +4,8 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { ProfileQueryService } from './query.service';
 import { ProfileRepository } from './repository';
 import { ProfileSchema } from './schema';
-import { DatabaseCollectionNames } from '../../shared/enums';
+import { DatabaseCollectionNames, DatabaseModelNames } from '../../shared/enums';
+import { UserSchema } from '../user/user.schema';
 
 @Module({
   imports: [
@@ -13,10 +14,18 @@ import { DatabaseCollectionNames } from '../../shared/enums';
         name: DatabaseCollectionNames.PROFILE,
         schema: ProfileSchema,
       },
+      {
+        name: DatabaseModelNames.PROFILE,
+        schema: ProfileSchema,
+      },
+      {
+        name: DatabaseCollectionNames.USER,
+        schema: UserSchema,
+      },
     ]),
   ],
   controllers: [],
   providers: [ProfileQueryService, ProfileRepository],
-  exports: [ProfileQueryService],
+  exports: [ProfileQueryService, ProfileRepository],
 })
 export class ProfileModule {}

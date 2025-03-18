@@ -8,14 +8,34 @@ import { StoreDto } from './dtos/store.dto';
 
 @Injectable()
 export class StoreRepository {
-  constructor(@InjectModel(DatabaseCollectionNames.STORE) private StoreModel: Model<StoreDocument>) {}
+  constructor(
+    @InjectModel(DatabaseCollectionNames.STORE) private StoreModel: Model<StoreDocument>,
+    // @InjectModel(DatabaseCollectionNames.PROFILE) private ProfileModel: Model<ProfileDocument>,
+  ) {}
 
   async create(store: Partial<Store>): Promise<StoreDocument> {
     return this.StoreModel.create(store);
   }
 
+  async find(filter: FilterQuery<StoreDocument>): Promise<StoreDocument[]> {
+    return this.StoreModel.find(filter).populate('profile').populate('about').exec();
+  }
+
   async findAll(): Promise<StoreDocument[]> {
     return this.StoreModel.find().exec();
+  }
+
+  async findAllForView(): Promise<StoreDocument[]> {
+    return this.StoreModel.find()
+      .populate({
+        path: 'profile',
+        populate: {
+          path: 'user',
+          select: 'name email',
+        },
+      })
+      .populate('about')
+      .exec();
   }
 
   async findById(id: Identifier): Promise<StoreDocument> {
@@ -23,7 +43,7 @@ export class StoreRepository {
   }
 
   async findOne(filter: FilterQuery<StoreDocument>): Promise<StoreDto> {
-    return this.StoreModel.findOne(filter).populate('profile').exec();
+    return this.StoreModel.findOne(filter).populate('profile').populate('about').exec();
   }
 
   async update(id: Identifier, store: Partial<StoreDocument>): Promise<StoreDocument> {

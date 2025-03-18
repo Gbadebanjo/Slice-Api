@@ -4,10 +4,14 @@ import { StoreRepository } from './repository';
 import { Store } from './schema';
 import { BadRequestException } from '../../exceptions';
 import { StoreDto } from './dtos/store.dto';
+import { ProfileRepository } from '../profile/repository';
 
 @Injectable()
 export class StoreQueryService {
-  constructor(private readonly storeRepository: StoreRepository) {}
+  constructor(
+    private readonly storeRepository: StoreRepository,
+    private readonly profileRepository: ProfileRepository,
+  ) {}
 
   public async createStore(store: Partial<Store>): Promise<Store> {
     const findStore = await this.storeRepository.findOne({ profile: store.profile });
@@ -21,6 +25,14 @@ export class StoreQueryService {
     return this.storeRepository.findAll();
   }
 
+  public async getStoresForView(): Promise<Store[]> {
+    return this.storeRepository.findAllForView();
+  }
+
+  public async getStoresByCategory(category: string[]): Promise<Store[]> {
+    return this.storeRepository.find({ categories: { $in: category } });
+  }
+
   public async getStoreByProfileId(profileId: Identifier): Promise<StoreDto> {
     return this.storeRepository.findOne({ profile: profileId });
   }
@@ -31,5 +43,15 @@ export class StoreQueryService {
       throw BadRequestException.RESOURCE_NOT_FOUND('Store not found for this profile');
     }
     return this.storeRepository.update(findStore._id, store);
+  }
+
+  public async getStore(userId: Identifier): Promise<StoreDto> {
+    const userProfile = await this.profileRepository.findOne({ user: userId });
+    if (!userProfile) {
+      throw BadRequestException.RESOURCE_NOT_FOUND('Profile not found');
+    }
+
+    const store = await this.storeRepository.findOne({ profile: userProfile._id });
+    return store;
   }
 }

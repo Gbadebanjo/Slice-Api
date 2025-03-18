@@ -15,7 +15,7 @@ export class Product {
     required: true,
     default: () => new Types.ObjectId(),
   })
-  _id: Types.ObjectId;
+  _id?: Types.ObjectId;
 
   @ApiProperty({
     description: 'The name of the product',
