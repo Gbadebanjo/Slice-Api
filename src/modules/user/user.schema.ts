@@ -40,11 +40,19 @@ export class User {
 
   // name is the full name of the user
   @ApiProperty({
-    description: 'The full name of the user',
-    example: 'John Doe',
+    description: 'The first name of the user',
+    example: 'John',
   })
   @Prop()
-  name: string;
+  firstName: string;
+
+  // name is the full name of the user
+  @ApiProperty({
+    description: 'The last name of the user',
+    example: 'Doe',
+  })
+  @Prop()
+  lastName: string;
 
   // verified is a boolean value that indicates whether the user has verified their email address
   @ApiProperty({
@@ -60,7 +68,7 @@ export class User {
   // Account type of the user. Can be either "buyer" or "vendor"
   @ApiProperty({
     description: 'The account type of the user',
-    example: 'buyer',
+    example: 'vendor',
   })
   @Prop()
   accountType: string;

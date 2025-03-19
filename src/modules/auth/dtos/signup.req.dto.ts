@@ -7,10 +7,15 @@ export class SignupReqDto {
   @IsEmail()
   email: string;
 
-  @ApiProperty({ description: 'Full name of the user', example: 'John Doe' })
+  @ApiProperty({ description: 'First name of the user', example: 'John' })
   @IsNotEmpty()
   @IsString()
-  name: string;
+  firstName: string;
+
+  @ApiProperty({ description: 'last name of the user', example: 'John' })
+  @IsNotEmpty()
+  @IsString()
+  lastName: string;
 
   @ApiProperty({
     description:

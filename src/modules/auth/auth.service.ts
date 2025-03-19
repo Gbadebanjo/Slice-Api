@@ -35,7 +35,7 @@ export class AuthService {
   ) {}
 
   async signup(signupReqDto: SignupReqDto): Promise<SignupResDto> {
-    const { email, password, name, accountType } = signupReqDto;
+    const { email, password, firstName, lastName, accountType } = signupReqDto;
     // const workspaceName = 'Slice Dev WorkSpace';
 
     const user = await this.userQueryService.findByEmail(email);
@@ -56,7 +56,8 @@ export class AuthService {
     const userPayload: User = {
       email,
       password: hashedPassword,
-      name,
+      firstName,
+      lastName,
       accountType,
       verified: false,
       verificationCode: null,
@@ -80,7 +81,7 @@ export class AuthService {
     await this.mailService.sendMail({
       to: email,
       subject: 'Welcome to Slice Buy',
-      text: `Welcome to Slice Buy, ${name}!`,
+      text: `Welcome to Slice Buy, ${firstName}!`,
       html: mailBody,
     });
 
@@ -156,12 +157,12 @@ export class AuthService {
           type: 'registration',
           userType: user.accountType,
         });
-        const mailBody = otpEmail(user.name, token);
+        const mailBody = otpEmail(user.firstName, token);
 
         await this.mailService.sendMail({
           to: email,
           subject: 'Please verify your email address',
-          text: `Welcome to Slice Buy, ${user.name}!`,
+          text: `Welcome to Slice Buy, ${user.firstName}!`,
           html: mailBody,
         });
 
@@ -171,7 +172,7 @@ export class AuthService {
         };
       }
     } else {
-      if (!user.name || !user.password) {
+      if (!user.firstName || !user.password) {
         throw UnauthorizedException.UNAUTHORIZED_ACCESS('Invalid Account');
       }
       // await this.tokenQueryService.create({
@@ -243,12 +244,12 @@ export class AuthService {
           userId: user._id,
           expiresIn: new Date(Date.now() + Constants.tokenExpiry),
         });
-        const mailBody = otpEmail(user.name, token);
+        const mailBody = otpEmail(user.firstName, token);
 
         await this.mailService.sendMail({
           to: email,
           subject: 'Please verify your email address',
-          text: `Welcome to Slice Buy, ${user.name}!`,
+          text: `Welcome to Slice Buy, ${user.firstName}!`,
           html: mailBody,
         });
 
@@ -267,12 +268,12 @@ export class AuthService {
         type: 'registration',
         userType: user.accountType,
       });
-      const mailBody = otpEmail(user.name, token);
+      const mailBody = otpEmail(user.firstName, token);
 
       await this.mailService.sendMail({
         to: email,
         subject: 'Please verify your email address',
-        text: `Welcome to Slice Buy, ${user.name}!`,
+        text: `Welcome to Slice Buy, ${user.firstName}!`,
         html: mailBody,
       });
 

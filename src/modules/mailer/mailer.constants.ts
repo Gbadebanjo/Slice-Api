@@ -4,7 +4,7 @@ export const registrationEmail = (user: User, token: string) => {
   return `<html>
             <body>
               <div>
-                <p>Hi ${user.name}!</p>
+                <p>Hi ${user.firstName}!</p>
                 <p>You did it! You registered!, You're successfully registered.✔</p>
                 <p>Please enter the otp below to verify your account:</p>
                 <h3>${token}</h3>
