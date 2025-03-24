@@ -124,7 +124,7 @@ export class AuthService {
     const { email } = resendOtpDto;
     const user = await this.userQueryService.findByEmail(email);
     if (!user) {
-      throw UnauthorizedException.UNAUTHORIZED_ACCESS('Invalid credentials');
+      throw UnauthorizedException.RESOURCE_NOT_FOUND('User Not Found');
     }
 
     // const isPasswordValid = await bcrypt.compare(password, user.password);
