@@ -34,15 +34,14 @@ export class AllExceptionsFilter implements ExceptionFilter {
 
     const httpStatus = exception instanceof HttpException ? exception.getStatus() : HttpStatus.INTERNAL_SERVER_ERROR;
 
-    const request = ctx.getRequest();
+    // const request = ctx.getRequest();
 
     // Construct the response body.
     const responseBody = {
       error: exception.code,
       message: exception.message,
       description: exception.description,
-      timestamp: new Date().toISOString(),
-      traceId: request.id,
+      // s
     };
 
     // Send the HTTP response.

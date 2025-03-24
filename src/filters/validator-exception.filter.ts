@@ -28,7 +28,7 @@ export class ValidationExceptionFilter implements ExceptionFilter {
     const ctx = host.switchToHttp();
     const httpStatus = HttpStatus.UNPROCESSABLE_ENTITY;
 
-    const request = ctx.getRequest();
+    // const request = ctx.getRequest();
     // Example of fetching path to attach path inside response object
     // const path = httpAdapter.getRequestUrl(request);
 
@@ -40,8 +40,8 @@ export class ValidationExceptionFilter implements ExceptionFilter {
     const responseBody = {
       error: err.code,
       message: err.message,
-      timestamp: new Date().toISOString(),
-      traceId: request.id,
+      // timestamp: new Date().toISOString(),
+      // traceId: request.id,
     };
 
     // Uses the HTTP adapter to send the response with the constructed response body
