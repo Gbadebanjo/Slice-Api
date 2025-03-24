@@ -94,7 +94,7 @@ export class UnauthorizedException extends HttpException {
     return {
       code: this.code,
       message: message || this.message,
-      description: this.description,
+      // description: this.description,
       // timestamp: this.timestamp,
       // traceId: this.traceId,
     };

@@ -8,7 +8,7 @@ export interface IException {
 export interface IHttpBadRequestExceptionResponse {
   code: number;
   message: string;
-  description: string;
+  // description: string;
   // timestamp: string;
   // traceId: string;
 }
@@ -16,7 +16,7 @@ export interface IHttpBadRequestExceptionResponse {
 export interface IHttpInternalServerErrorExceptionResponse {
   code: number;
   message: string;
-  description: string;
+  // description: string;
   // timestamp: string;
   // traceId: string;
 }
@@ -24,7 +24,7 @@ export interface IHttpInternalServerErrorExceptionResponse {
 export interface IHttpUnauthorizedExceptionResponse {
   code: number;
   message: string;
-  description: string;
+  // description: string;
   // timestamp: string;
   // traceId: string;
 }
@@ -32,7 +32,7 @@ export interface IHttpUnauthorizedExceptionResponse {
 export interface IHttpForbiddenExceptionResponse {
   code: number;
   message: string;
-  description: string;
+  // description: string;
   // timestamp: string;
   // traceId: string;
 }
