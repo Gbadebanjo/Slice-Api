@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsEmail, IsNotEmpty, IsString, Matches, MaxLength, MinLength } from 'class-validator';
+import { IsEmail, IsNotEmpty, IsString } from 'class-validator';
 
 export class LoginReqDto {
   @ApiProperty({ description: 'Email address of the user', example: 'oluwagbogoadebanjo@yahoo.com' })
@@ -13,10 +13,5 @@ export class LoginReqDto {
     example: 'MySecure@Password!#',
   })
   @IsString()
-  @MinLength(8)
-  @MaxLength(20)
-  @Matches(/((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$/, {
-    message: 'Password is too weak',
-  })
   password: string;
 }
