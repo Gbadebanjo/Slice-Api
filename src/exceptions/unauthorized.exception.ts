@@ -131,8 +131,8 @@ export class UnauthorizedException extends HttpException {
    */
   static UNAUTHORIZED_ACCESS = (description?: string) => {
     return new UnauthorizedException({
-      message: 'Access to the requested resource is unauthorized.',
-      code: ExceptionConstants.UnauthorizedCodes.UNAUTHORIZED_ACCESS,
+      message: description,
+      // code: ExceptionConstants.UnauthorizedCodes.UNAUTHORIZED_ACCESS,
       description,
     });
   };
