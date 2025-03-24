@@ -121,16 +121,16 @@ export class AuthService {
   }
 
   async resendVerificationCode(resendOtpDto: ResendEmailCodeReqDto): Promise<SignupResDto> {
-    const { email, password } = resendOtpDto;
+    const { email } = resendOtpDto;
     const user = await this.userQueryService.findByEmail(email);
     if (!user) {
       throw UnauthorizedException.UNAUTHORIZED_ACCESS('Invalid credentials');
     }
 
-    const isPasswordValid = await bcrypt.compare(password, user.password);
-    if (!isPasswordValid) {
-      throw UnauthorizedException.UNAUTHORIZED_ACCESS('Invalid credentials');
-    }
+    // const isPasswordValid = await bcrypt.compare(password, user.password);
+    // if (!isPasswordValid) {
+    //   throw UnauthorizedException.UNAUTHORIZED_ACCESS('Invalid credentials');
+    // }
 
     if (user.verified) {
       throw UnauthorizedException.UNAUTHORIZED_ACCESS('Email already verified');

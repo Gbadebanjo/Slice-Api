@@ -10,10 +10,10 @@ export class ResendEmailCodeReqDto {
   @IsEmail()
   email: string;
 
-  @ApiProperty({
-    example: 'Password of the user',
-    description: 'Password of the user',
-  })
-  @IsNotEmpty()
-  password: string;
+  // @ApiProperty({
+  //   example: 'Password of the user',
+  //   description: 'Password of the user',
+  // })
+  // @IsNotEmpty()
+  // password: string;
 }
