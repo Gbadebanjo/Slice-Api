@@ -35,8 +35,9 @@ export class AuthService {
   ) {}
 
   async signup(signupReqDto: SignupReqDto): Promise<SignupResDto> {
-    const { email, password, firstName, lastName, accountType } = signupReqDto;
+    const { password, firstName, lastName, accountType } = signupReqDto;
     // const workspaceName = 'Slice Dev WorkSpace';
+    const email = signupReqDto.email.toLowerCase();
 
     const user = await this.userQueryService.findByEmail(email);
     if (user) {
@@ -92,7 +93,8 @@ export class AuthService {
   }
 
   async verifyEmail(verifyAccountDto: VerifyAccountDto): Promise<SignupResDto> {
-    const { email, verificationCode } = verifyAccountDto;
+    const { verificationCode } = verifyAccountDto;
+    const email = verifyAccountDto.email.toLowerCase();
 
     const user = await this.userQueryService.findByEmail(email);
     if (!user) {
@@ -121,7 +123,7 @@ export class AuthService {
   }
 
   async resendVerificationCode(resendOtpDto: ResendEmailCodeReqDto): Promise<SignupResDto> {
-    const { email } = resendOtpDto;
+    const email = resendOtpDto.email.toLowerCase();
     const user = await this.userQueryService.findByEmail(email);
     if (!user) {
       throw UnauthorizedException.RESOURCE_NOT_FOUND('User Not Found');
@@ -212,8 +214,9 @@ export class AuthService {
   }
 
   async login(loginReqDto: LoginReqDto): Promise<LoginResDto> {
-    const { email, password } = loginReqDto;
+    const { password } = loginReqDto;
 
+    const email = loginReqDto.email.toLowerCase();
     const user = await this.userQueryService.findByEmail(email);
     if (!user) {
       throw UnauthorizedException.UNAUTHORIZED_ACCESS('Invalid credentials');
