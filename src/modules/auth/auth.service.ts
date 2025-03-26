@@ -100,7 +100,7 @@ export class AuthService {
     };
   }
 
-  async verifyEmail(verifyAccountDto: VerifyAccountDto, tokenType: string): Promise<SignupResDto> {
+  async verifyEmail(verifyAccountDto: VerifyAccountDto, tokenType: string, successMsg?: string): Promise<SignupResDto> {
     const { verificationCode } = verifyAccountDto;
     const email = verifyAccountDto.email.toLowerCase();
 
@@ -126,7 +126,7 @@ export class AuthService {
 
     return {
       success: true,
-      message: 'Email verified successfully',
+      message: successMsg || 'Email verified successfully',
     };
   }
 

@@ -84,7 +84,7 @@ export class AuthController {
   @HttpCode(200)
   @Post('verify-forgot-password')
   async verifyForgotPasswordOtp(@Body(ValidationPipe) verifyAccountDto: VerifyAccountDto): Promise<VerifyEmailRes> {
-    return this.authService.verifyEmail(verifyAccountDto, 'forgotPassword');
+    return this.authService.verifyEmail(verifyAccountDto, 'forgotPassword', 'Email verification successful, please reset your password');
   }
 
   // POST /auth/reset-password
