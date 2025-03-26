@@ -50,3 +50,16 @@ export const otpEmail = (name: string, otp: string) => {
           </html>
   `;
 };
+
+export const forgotPasswordOtpEmail = (name: string, otp: string) => {
+  return `<html>
+            <body>
+              <div>
+                <p>Hi, ${name}! </p>
+                <p>Please enter the otp below to reset your password:</p>
+                <h3>${otp}</h3>
+              </div>
+            </body>
+          </html>
+  `;
+};

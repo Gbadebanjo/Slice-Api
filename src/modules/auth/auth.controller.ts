@@ -11,6 +11,7 @@ import { VerifyAccountDto } from './dtos/verify.email.dto';
 import { VerifyEmailRes } from './dtos/verify.email.res.dto';
 import { ResendEmailCodeRes } from './dtos/resend.email.code.res.dto';
 import { ResendEmailCodeReqDto } from './dtos/resend.email.code.req.dto';
+import { ResetPasswordReqDto } from './dtos/reset.password.dto';
 
 @ApiBadRequestResponse({
   type: BadRequestException,
@@ -43,7 +44,7 @@ export class AuthController {
   @HttpCode(200)
   @Post('verify-email')
   async verifyEmail(@Body(ValidationPipe) verifyAccountDto: VerifyAccountDto): Promise<VerifyEmailRes> {
-    return this.authService.verifyEmail(verifyAccountDto);
+    return this.authService.verifyEmail(verifyAccountDto, 'registration');
   }
 
   // POST /auth/resend-otp
@@ -64,5 +65,35 @@ export class AuthController {
   @Post('login')
   async login(@Body(ValidationPipe) loginReqDto: LoginReqDto): Promise<LoginResDto> {
     return this.authService.login(loginReqDto);
+  }
+
+  // POST /auth/forgot-password
+  @ApiOkResponse({
+    type: ResendEmailCodeRes,
+  })
+  @HttpCode(200)
+  @Post('forgot-password')
+  async forgotPassword(@Body(ValidationPipe) passwordReset: ResendEmailCodeReqDto): Promise<SignupResDto> {
+    return this.authService.passwordResetRequest(passwordReset);
+  }
+
+  // POST /auth/verify-forgot-password
+  @ApiOkResponse({
+    type: VerifyEmailRes,
+  })
+  @HttpCode(200)
+  @Post('verify-forgot-password')
+  async verifyForgotPasswordOtp(@Body(ValidationPipe) verifyAccountDto: VerifyAccountDto): Promise<VerifyEmailRes> {
+    return this.authService.verifyEmail(verifyAccountDto, 'forgotPassword');
+  }
+
+  // POST /auth/reset-password
+  @ApiOkResponse({
+    type: SignupResDto,
+  })
+  @HttpCode(200)
+  @Post('reset-password')
+  async resetPassword(@Body(ValidationPipe) resetPasswordReqDto: ResetPasswordReqDto): Promise<SignupResDto> {
+    return this.authService.resetPassword(resetPasswordReqDto);
   }
 }

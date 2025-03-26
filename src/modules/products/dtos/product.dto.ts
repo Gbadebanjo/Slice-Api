@@ -26,10 +26,10 @@ export class ProductDto {
 
   @ApiProperty({
     type: String,
-    description: 'Product image URL',
+    description: 'Product image URLs',
     required: true,
   })
-  image: string;
+  image: string[];
 
   //   @ApiProperty({
   //     type: Types.ObjectId,

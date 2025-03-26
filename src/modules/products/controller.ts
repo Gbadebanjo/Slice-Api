@@ -35,6 +35,25 @@ export class ProductController {
     };
   }
 
+  // GET /products/:category
+  @HttpCode(200)
+  @ApiOkResponse({
+    type: GetProductResDto,
+  })
+  @Get(':category')
+  async getProductsByCategory(@Param('category') category: string): Promise<GetProductResDto & { products: ProductDto[] }> {
+    const products = await this.productQueryService.getProductsByCategory(category);
+    if (!products) {
+      throw BadRequestException.RESOURCE_NOT_FOUND('Products not found');
+    }
+
+    return {
+      success: true,
+      message: 'Products Found',
+      products,
+    };
+  }
+
   // GET /products/stores
   @HttpCode(200)
   @ApiOkResponse({

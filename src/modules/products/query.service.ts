@@ -17,6 +17,10 @@ export class ProductQueryService {
     return this.productRepository.getProductsWithStore();
   }
 
+  public async getProductsByCategory(category: string) {
+    return this.productRepository.find({ $in: { category } });
+  }
+
   public async getProductById(id: Identifier): Promise<ProductResDto | null> {
     return this.productRepository.findById(id);
   }

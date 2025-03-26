@@ -42,7 +42,7 @@ export class Product {
   @Prop({
     required: true,
   })
-  image: string;
+  image: string[];
 
   @ApiProperty({
     description: 'The store reference of the product',

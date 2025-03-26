@@ -18,9 +18,10 @@ import { UserQueryService } from '../user/user.query.service';
 // Shared dependencies
 import { BadRequestException } from '../../exceptions/bad-request.exception';
 import { UnauthorizedException } from '../../exceptions/unauthorized.exception';
-import { otpEmail, registrationEmail } from '../mailer/mailer.constants';
+import { forgotPasswordOtpEmail, otpEmail, registrationEmail } from '../mailer/mailer.constants';
 import { VerifyAccountDto } from './dtos/verify.email.dto';
 import { ResendEmailCodeReqDto } from './dtos/resend.email.code.req.dto';
+import { ResetPasswordReqDto } from './dtos/reset.password.dto';
 
 @Injectable()
 export class AuthService {
@@ -63,6 +64,13 @@ export class AuthService {
       verified: false,
       verificationCode: null,
       resetToken: null,
+      profilePicture: '',
+      notificationSettings: {
+        showMessageAlert: true,
+        layawayReminder: true,
+        dailyMission: true,
+      },
+      isInRecovery: false,
     };
 
     const createUser = await this.userQueryService.create(userPayload);
@@ -92,7 +100,7 @@ export class AuthService {
     };
   }
 
-  async verifyEmail(verifyAccountDto: VerifyAccountDto): Promise<SignupResDto> {
+  async verifyEmail(verifyAccountDto: VerifyAccountDto, tokenType: string): Promise<SignupResDto> {
     const { verificationCode } = verifyAccountDto;
     const email = verifyAccountDto.email.toLowerCase();
 
@@ -103,7 +111,7 @@ export class AuthService {
 
     const findToken = await this.tokenQueryService.findToken({
       userId: user._id,
-      type: 'registration',
+      type: tokenType,
       value: verificationCode,
       userType: user.accountType,
     });
@@ -201,6 +209,105 @@ export class AuthService {
 
       throw UnauthorizedException.UNAUTHORIZED_ACCESS('Invalid verification code request');
     }
+  }
+
+  async passwordResetRequest(resetPasswordDto: ResendEmailCodeReqDto): Promise<SignupResDto> {
+    const { email } = resetPasswordDto;
+    const user = await this.userQueryService.findByEmail(email);
+    if (!user) {
+      throw UnauthorizedException.RESOURCE_NOT_FOUND('User Not Found');
+    }
+
+    const token = this.generateCode().toString();
+
+    const findToken = await this.tokenQueryService.findAToken({
+      userId: user._id,
+      type: 'forgotPassword',
+      userType: user.accountType,
+      value: '', // Just dummy not to break the code
+    });
+
+    await this.userQueryService.updateById(user._id, {
+      ...user,
+      isInRecovery: true,
+    });
+
+    if (findToken) {
+      if (findToken.expiresIn > new Date()) {
+        throw UnauthorizedException.UNAUTHORIZED_ACCESS('Password reset code already sent');
+      } else {
+        await this.tokenQueryService.updateToken({
+          _id: findToken._id,
+          value: token,
+          expiresIn: new Date(Date.now() + Constants.tokenExpiry),
+          userId: user._id,
+          type: 'forgotPassword',
+          userType: user.accountType,
+        });
+        const mailBody = otpEmail(user.firstName, token);
+
+        await this.mailService.sendMail({
+          to: email,
+          subject: 'Password Reset Request',
+          text: `Hello, ${user.firstName}!`,
+          html: mailBody,
+        });
+
+        return {
+          success: true,
+          message: 'Password reset code sent successfully',
+        };
+      }
+    } else {
+      await this.tokenQueryService.create({
+        value: token,
+        type: 'forgotPassword',
+        userType: 'user',
+        userId: user._id,
+        expiresIn: new Date(Date.now() + Constants.tokenExpiry),
+      });
+
+      const mailBody = forgotPasswordOtpEmail(user.firstName || email, token);
+
+      await this.mailService.sendMail({
+        to: email,
+        subject: 'Password Reset Request',
+        text: `Hello, ${user.firstName}!`,
+        html: mailBody,
+      });
+
+      return {
+        success: true,
+        message: 'Password reset code sent successfully',
+      };
+    }
+  }
+
+  async resetPassword(resetPasswordDto: ResetPasswordReqDto): Promise<SignupResDto> {
+    const { password, email } = resetPasswordDto;
+
+    const user = await this.userQueryService.findByEmail(email);
+    if (!user) {
+      throw UnauthorizedException.RESOURCE_NOT_FOUND('User Not Found');
+    }
+
+    if (!user.isInRecovery) {
+      throw UnauthorizedException.UNAUTHORIZED_ACCESS('Invalid password reset request');
+    }
+
+    const saltOrRounds = this.SALT_ROUNDS;
+    const hashedPassword = await bcrypt.hash(password, saltOrRounds);
+
+    await this.userQueryService.updateById(user._id, {
+      ...user,
+      password: hashedPassword,
+      isInRecovery: false,
+    });
+
+    return {
+      success: true,
+      message: 'Password reset successfully',
+    };
   }
 
   /**

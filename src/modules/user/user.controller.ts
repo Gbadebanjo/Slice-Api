@@ -1,4 +1,5 @@
 // External dependencies
+import * as bcrypt from 'bcryptjs';
 import { ApiBearerAuth, ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { Body, Controller, Get, HttpCode, Logger, Post, Put, UseGuards } from '@nestjs/common';
 
@@ -13,14 +14,20 @@ import { ProfileResDto } from '../profile/dtos/profile.res';
 import { ProfileQueryService } from '../profile/query.service';
 // import { Profile } from '../profile/schema';
 import { UpdateProfileReqDto } from '../profile/dtos/update.profile.dto';
-import { BadRequestException } from '../../exceptions';
+import { BadRequestException, UnauthorizedException } from '../../exceptions';
+import { ChangePasswordResDto } from './dtos/change-password.res,dto';
+import { ChangePasswordReqDto } from './dtos/change-password.req.dto';
+import { UserQueryService } from './user.query.service';
 
 @ApiBearerAuth()
 @ApiTags('User')
 @UseGuards(JwtUserAuthGuard)
 @Controller('user')
 export class UserController {
-  constructor(private readonly profileQueryService: ProfileQueryService) {}
+  constructor(
+    private readonly profileQueryService: ProfileQueryService,
+    private readonly userQueryService: UserQueryService,
+  ) {}
 
   private readonly logger = new Logger(UserController.name);
 
@@ -35,6 +42,29 @@ export class UserController {
     return {
       message: 'Profile retrieved successfully',
       user,
+    };
+  }
+
+  // Change Password
+  @HttpCode(200)
+  @ApiOkResponse({
+    type: ChangePasswordResDto,
+  })
+  @Post('change-password')
+  async changePassword(@GetUser() user: UserDocument, @Body() passwords: ChangePasswordReqDto): Promise<ChangePasswordResDto> {
+    const currentPasswordCompare = await bcrypt.compare(passwords.currentPassword, user.password);
+
+    if (!currentPasswordCompare) {
+      throw UnauthorizedException.UNAUTHORIZED_ACCESS('Current password is incorrect');
+    }
+
+    const saltOrRounds = 10;
+    const hashedPassword = await bcrypt.hash(passwords.newPassword, saltOrRounds);
+
+    await this.userQueryService.updateById(user._id, { ...user, password: hashedPassword });
+
+    return {
+      message: 'Password updated successfully',
     };
   }
 

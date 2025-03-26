@@ -3,13 +3,13 @@ import { ApiHideProperty, ApiProperty } from '@nestjs/swagger';
 import { HydratedDocument, Schema as MongooseSchema, Types } from 'mongoose';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 
-import { DatabaseCollectionNames } from '../../shared/enums';
+// import { DatabaseCollectionNames } from '../../shared/enums';
 import { Identifier } from '../../shared/types';
 
 @Schema({
   timestamps: true,
   // timestamps:{createdAt:'created_at',updatedAt:'updated_at'},
-  collection: DatabaseCollectionNames.USER,
+  // collection: DatabaseCollectionNames.USER,
 })
 export class User {
   // _id is the unique identifier of the user
@@ -90,6 +90,48 @@ export class User {
     type: MongooseSchema.Types.Number,
   })
   registerCode?: number;
+
+  @ApiProperty({
+    description: 'User profile picture',
+    example: 'https://example.com/profile.jpg',
+    required: false,
+  })
+  @Prop({
+    type: MongooseSchema.Types.String,
+    default: '',
+  })
+  profilePicture: string;
+
+  // Settings
+  @ApiProperty({
+    description: 'User notification settings',
+    example: {
+      showMessageAlert: true,
+      layawayReminder: true,
+      dailyMission: true,
+    },
+    required: false,
+  })
+  @Prop({
+    type: MongooseSchema.Types.Mixed,
+    default: {
+      showMessageAlert: true,
+      layawayReminder: true,
+      dailyMission: true,
+    },
+  })
+  notificationSettings: {
+    showMessageAlert: boolean;
+    layawayReminder: boolean;
+    dailyMission: boolean;
+  };
+
+  @ApiHideProperty()
+  @Prop({
+    type: MongooseSchema.Types.Boolean,
+    default: false,
+  })
+  isInRecovery: boolean;
 }
 
 export type UserIdentifier = Identifier | User;

@@ -3,11 +3,11 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 
 // import { DatabaseCollectionNames } from '../../shared/enums/db.enum';
 import { Identifier } from '../../shared/types/schema.type';
-import { DatabaseCollectionNames, TokenTypes, UserTypes } from '../../shared/enums';
+import { TokenTypes, UserTypes } from '../../shared/enums';
 
 @Schema({
   timestamps: true,
-  collection: DatabaseCollectionNames.TOKEN,
+  // collection: DatabaseCollectionNames.TOKEN,
 })
 export class Token {
   @Prop({

@@ -12,7 +12,21 @@ export class ProductRepository {
   constructor(@InjectModel(DatabaseCollectionNames.PRODUCT) private ProductModel: Model<ProductDocument>) {}
 
   public async find(filter: FilterQuery<ProductDocument>): Promise<Product[]> {
-    return this.ProductModel.find(filter).lean();
+    return this.ProductModel.find(filter)
+      .populate({
+        path: 'store',
+        populate: [
+          {
+            path: 'profile',
+            select: 'storeName storeDescription phoneNumber',
+          },
+          {
+            path: 'about',
+            select: 'abouts',
+          },
+        ],
+      })
+      .lean();
   }
 
   public async findAll(): Promise<Product[]> {
