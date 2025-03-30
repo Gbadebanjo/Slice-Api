@@ -5,6 +5,7 @@ export enum DatabaseCollectionNames {
   STORE = 'stores',
   PRODUCT = 'products',
   ABOUT = 'abouts',
+  LAYAWAY = 'layaways',
 }
 
 export enum DatabaseModelNames {
@@ -14,6 +15,7 @@ export enum DatabaseModelNames {
   STORE = 'Store',
   PRODUCT = 'Product',
   ABOUT = 'About',
+  LAYAWAY = 'Layaway',
 }
 
 export enum TokenTypes {

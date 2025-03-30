@@ -52,8 +52,6 @@ export class UserController {
   })
   @Post('change-password')
   async changePassword(@GetUser() user: UserDocument, @Body() passwords: ChangePasswordReqDto): Promise<ChangePasswordResDto> {
-    // console.log('user', user);
-
     const userData = await this.userQueryService.findById(user._id);
     const currentPasswordCompare = await bcrypt.compare(passwords.currentPassword, userData.password);
 

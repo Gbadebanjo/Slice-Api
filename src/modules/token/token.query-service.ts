@@ -18,7 +18,6 @@ export class TokenQueryService {
 
   async findToken(token: Token): Promise<Token> {
     try {
-      console.log(token);
       return await this.tokenRepository.findOne({
         userId: token.userId,
         type: token.type,

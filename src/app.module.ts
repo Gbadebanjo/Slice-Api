@@ -26,6 +26,7 @@ import { UserModule } from './modules/user/user.module';
 import { TokenModule } from './modules/token/token.module';
 import { StoreModule } from './modules/store/module';
 import { ProductModule } from './modules/products/module';
+import { LayawayModule } from './modules/layaways/module';
 // import { AboutModule } from './modules/about/module';
 // import { WorkspaceModule } from './modules/workspace/workspace.module';
 
@@ -57,6 +58,7 @@ import { ProductModule } from './modules/products/module';
     TokenModule,
     StoreModule,
     ProductModule,
+    LayawayModule,
     // AboutModule,
   ],
   controllers: [AppController], // Define the application's controller

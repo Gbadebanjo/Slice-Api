@@ -94,6 +94,16 @@ export class Product {
     required: false,
   })
   likes?: Types.ObjectId[];
+
+  @ApiProperty({
+    description: 'The status of the product',
+    example: 'active',
+  })
+  @Prop({
+    enum: ['active', 'inactive'],
+    default: 'active',
+  })
+  status: 'active' | 'inactive';
 }
 
 export type ProductIdentifier = Identifier | Product;
