@@ -104,6 +104,20 @@ export class Product {
     default: 'active',
   })
   status: 'active' | 'inactive';
+
+  // @ApiProperty({
+  //   description: 'The quantity of the product',
+  //   example: 100,
+  // })
+  // @Prop({
+  //   required: true,
+  // })
+  // quantity: number;
+
+  // @ApiProperty({
+
+  // })
+  // outOfStock?: boolean;
 }
 
 export type ProductIdentifier = Identifier | Product;

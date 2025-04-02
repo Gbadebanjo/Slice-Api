@@ -27,6 +27,7 @@ import { TokenModule } from './modules/token/token.module';
 import { StoreModule } from './modules/store/module';
 import { ProductModule } from './modules/products/module';
 import { LayawayModule } from './modules/layaways/module';
+import { CartModule } from './modules/cart/module';
 // import { AboutModule } from './modules/about/module';
 // import { WorkspaceModule } from './modules/workspace/workspace.module';
 
@@ -59,6 +60,7 @@ import { LayawayModule } from './modules/layaways/module';
     StoreModule,
     ProductModule,
     LayawayModule,
+    CartModule,
     // AboutModule,
   ],
   controllers: [AppController], // Define the application's controller

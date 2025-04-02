@@ -11,7 +11,26 @@ export class JwtUserAuthGuard extends AuthGuard('authUser') {
 
   canActivate(context: ExecutionContext) {
     // Add your custom authentication logic here
-    // for example, call super.logIn(request) to establish a session.
+    // // for example, call super.logIn(request) to establish a session.
+    // super.logIn(context.switchToHttp().getRequest());
+    // const request = context.switchToHttp().getRequest();
+
+    // const { authorization } = request.headers;
+    // if (!authorization && !request.cookies?.Authorization) {
+    //   throw UnauthorizedException.UNAUTHORIZED_ACCESS('Authorization header is missing');
+    // }
+
+    // const token = authorization.split(' ')[1];
+    // if (!token) {
+    //   throw UnauthorizedException.UNAUTHORIZED_ACCESS('Token is missing from authorization header');
+    // }
+    // if (token === 'null' || token === 'undefined') {
+    //   throw UnauthorizedException.UNAUTHORIZED_ACCESS('Token is invalid or expired');
+    // }
+
+    // request.user = token;
+    // // You can also use the request object to perform additional checks or validations
+
     return super.canActivate(context);
   }
 
