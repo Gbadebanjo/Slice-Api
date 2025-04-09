@@ -95,7 +95,7 @@ export class UserController {
   @ApiOkResponse({
     type: ProfileResDto,
   })
-  @Post('profile/vendor')
+  @Post('profile/vendor/create')
   async createVendorProfile(@GetUser() user: UserDocument, @Body() profileDetail: UpdateProfileReqDto): Promise<ProfileResDto> {
     if (user.accountType !== 'vendor') {
       return {
