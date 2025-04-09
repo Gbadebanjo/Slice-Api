@@ -78,7 +78,7 @@ export class AuthService {
     await this.tokenQueryService.create({
       value: token,
       type: 'registration',
-      userType: 'user',
+      userType: accountType,
       userId: createUser._id,
       expiresIn: new Date(Date.now() + Constants.tokenExpiry),
     });

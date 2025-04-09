@@ -105,7 +105,7 @@ export class UserController {
       };
     }
 
-    const checkProfile = await this.profileQueryService.getProfileByUserId(user._id);
+    const checkProfile = await this.profileQueryService.getProfile(user._id);
 
     if (checkProfile) {
       throw BadRequestException.RESOURCE_ALREADY_EXISTS('Profile already created');

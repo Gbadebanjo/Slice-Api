@@ -1,4 +1,4 @@
-import { Body, Controller, HttpCode, Param, Post, Query, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, Param, Post, Query, UseGuards } from '@nestjs/common';
 import { ApiBearerAuth, ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { CartQueryService } from './query.service';
 import { JwtUserAuthGuard } from '../auth/guards/jwt-user-auth.guard';
@@ -19,7 +19,7 @@ export class CartController {
     type: GeneralCartResDto,
     description: 'Create Cart',
   })
-  @Post('/create')
+  @Post('/add')
   async createCart(@GetUser() user, @Body() cartData: CreateCartReqDto): Promise<GeneralCartResDto> {
     const cartDetail = { ...cartData, userId: user._id };
     return this.cartQueryService.createCart(cartDetail);
@@ -40,7 +40,7 @@ export class CartController {
     type: GeneralCartResDto,
     description: 'Get Cart Items',
   })
-  @Post('/my')
+  @Get('/my')
   async getMyCart(@GetUser() user): Promise<GeneralCartResDto & { items: CartDocument[] }> {
     return this.cartQueryService.getCartItemsByUserId(user._id);
   }

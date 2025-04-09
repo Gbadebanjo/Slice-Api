@@ -30,6 +30,12 @@ export class ProfileQueryService {
     }
   }
 
+  public async getProfile(id: Identifier): Promise<Profile> {
+    const userProfile = await this.profileRepository.findOne({ user: id });
+
+    return userProfile;
+  }
+
   public async getProfileByUserId(id: Identifier): Promise<Profile> {
     const userProfile = await this.profileRepository.findOne({ user: id });
     // console.log(userProfile);
