@@ -25,6 +25,10 @@ export class ProductQueryService {
     });
   }
 
+  public async getRecntProducts() {
+    return this.productRepository.find({ createdAt: { $lte: new Date(Date.now()) } });
+  }
+
   public async getProductById(id: Identifier): Promise<ProductResDto | null> {
     return this.productRepository.findById(id);
   }

@@ -126,4 +126,22 @@ export class ProductController {
       products,
     };
   }
+
+  @HttpCode(200)
+  @ApiOkResponse({
+    type: GetProductResDto,
+  })
+  @Get('recent/products')
+  async getRecentProducts(): Promise<GetProductResDto & { products: ProductDto[] }> {
+    const products = await this.productQueryService.getRecntProducts();
+    if (!products) {
+      throw BadRequestException.RESOURCE_NOT_FOUND('Products not found');
+    }
+
+    return {
+      success: true,
+      message: 'Products',
+      products,
+    };
+  }
 }
