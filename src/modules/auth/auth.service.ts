@@ -212,7 +212,7 @@ export class AuthService {
   }
 
   async passwordResetRequest(resetPasswordDto: ResendEmailCodeReqDto): Promise<SignupResDto> {
-    const { email } = resetPasswordDto;
+    const email = resetPasswordDto.email.toLowerCase();
     const user = await this.userQueryService.findByEmail(email);
     if (!user) {
       throw UnauthorizedException.RESOURCE_NOT_FOUND('User Not Found');
@@ -284,7 +284,8 @@ export class AuthService {
   }
 
   async resetPassword(resetPasswordDto: ResetPasswordReqDto): Promise<SignupResDto> {
-    const { password, email } = resetPasswordDto;
+    const { password } = resetPasswordDto;
+    const email = resetPasswordDto.email.toLowerCase();
 
     const user = await this.userQueryService.findByEmail(email);
     if (!user) {

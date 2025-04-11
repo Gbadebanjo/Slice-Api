@@ -11,7 +11,7 @@ export class GetProductResDto {
 
   @ApiProperty({
     description: 'Response Message',
-    example: 'Store Found',
+    example: 'Products Found',
   })
   message: string;
 

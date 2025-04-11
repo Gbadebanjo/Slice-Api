@@ -18,7 +18,11 @@ export class ProductQueryService {
   }
 
   public async getProductsByCategory(category: string) {
-    return this.productRepository.find({ $in: { category } });
+    return this.productRepository.find({
+      category: {
+        $in: [category],
+      },
+    });
   }
 
   public async getProductById(id: Identifier): Promise<ProductResDto | null> {

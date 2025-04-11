@@ -59,7 +59,7 @@ export class ProductController {
   @ApiOkResponse({
     type: GetProductResDto,
   })
-  @Get('stores')
+  @Get('stores/all')
   async getStores(): Promise<GetProductResDto & { stores: Store[] }> {
     this.logger.log('Fetching all stores');
     const stores = await this.storeQueryService.getStoresForView();
@@ -75,7 +75,7 @@ export class ProductController {
   @ApiOkResponse({
     type: GetProductResDto,
   })
-  @Get(':productId')
+  @Get('product/:productId')
   async getProduct(@Param('productId') productId: string): Promise<GetProductResDto & { product: ProductDto | any }> {
     const product = await this.productQueryService.getProductById(productId);
     if (!product) {
