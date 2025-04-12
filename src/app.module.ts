@@ -30,6 +30,9 @@ import { LayawayModule } from './modules/layaways/module';
 import { CartModule } from './modules/cart/module';
 // import { AboutModule } from './modules/about/module';
 // import { WorkspaceModule } from './modules/workspace/workspace.module';
+// import { FileUploadModule } from './file-upload/file-upload.module';
+// import { CloudinaryUploadModule } from './cloudinary-upload/cloudinary-upload.module';
+import { CloudinaryModule } from './cloudinary/cloudinary.module';
 
 // Import other modules
 
@@ -61,6 +64,9 @@ import { CartModule } from './modules/cart/module';
     ProductModule,
     LayawayModule,
     CartModule,
+    // FileUploadModule,
+    // CloudinaryUploadModule,
+    CloudinaryModule,
     // AboutModule,
   ],
   controllers: [AppController], // Define the application's controller

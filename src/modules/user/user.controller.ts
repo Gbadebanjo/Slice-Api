@@ -1,8 +1,9 @@
 // External dependencies
 import * as bcrypt from 'bcryptjs';
-import { ApiBearerAuth, ApiOkResponse, ApiTags } from '@nestjs/swagger';
-import { Body, Controller, Get, HttpCode, Logger, Post, Put, UseGuards, UseInterceptors } from '@nestjs/common';
-
+import { ApiBearerAuth, ApiBody, ApiConsumes, ApiOkResponse, ApiTags } from '@nestjs/swagger';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { Body, Controller, Get, HttpCode, Logger, Post, Put, UploadedFile, UseGuards, UseInterceptors } from '@nestjs/common';
+import { UploadService } from 'src/cloudinary/cloudinary.service';
 // Internal dependencies
 import { GetProfileResDto } from './dtos';
 import { UserDocument } from './user.schema';
@@ -18,6 +19,7 @@ import { BadRequestException, UnauthorizedException } from '../../exceptions';
 import { ChangePasswordResDto } from './dtos/change-password.res,dto';
 import { ChangePasswordReqDto } from './dtos/change-password.req.dto';
 import { UserQueryService } from './user.query.service';
+import { FileUploadReqDto } from './dtos/file-upload.req.dto';
 
 @ApiBearerAuth()
 @ApiTags('User')
@@ -27,6 +29,7 @@ export class UserController {
   constructor(
     private readonly profileQueryService: ProfileQueryService,
     private readonly userQueryService: UserQueryService,
+    private readonly cloudinaryService: UploadService,
   ) {}
 
   private readonly logger = new Logger(UserController.name);
@@ -141,15 +144,43 @@ export class UserController {
     };
   }
 
-  // @HttpCode(200)
-  // @ApiOkResponse({
-  //   type: ProfileResDto,
-  // })
-  // @Post('profile/picture/upload')
-  // @UseInterceptors(FileInterceptor('file'))
-  // async uploadProfilePicture(@GetUser() user: UserDocument, @Body()){
+  @HttpCode(200)
+  @ApiOkResponse({
+    description: 'Image uploaded successfully',
+    schema: {
+      type: 'object',
+      properties: {
+        url: {
+          type: 'string',
+          example: 'https://res.cloudinary.com/demo/image/upload/sample.jpg',
+        },
+      },
+    },
+  })
+  @Post('upload-picture')
+  @UseInterceptors(FileInterceptor('file'))
+  @ApiConsumes('multipart/form-data') // 👈 Tells Swagger it accepts multipart
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        file: {
+          type: 'string',
+          format: 'binary', // 👈 Required for file uploads
+        },
+      },
+    },
+  })
+  async upload(@GetUser() user, @UploadedFile() fileData: Express.Multer.File): Promise<{ url: string }> {
+    const result = await this.cloudinaryService.uploadImage(fileData);
 
-  // }
+    if (result.secure_url) {
+      await this.userQueryService.updateById(user._id, { ...user, profilePicture: result.secure_url });
+    }
+    return {
+      url: result.secure_url,
+    };
+  }
 }
 
 // @ApiBearerAuth()

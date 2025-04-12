@@ -4,7 +4,7 @@ import { AppCategories } from 'src/shared/enums';
 export class StoreReqDto {
   @ApiProperty({
     description: 'Categories of the store',
-    example: ['Electronics', 'Books'],
+    example: Object.values(AppCategories),
     enum: Object.values(AppCategories),
   })
   categories: string[];

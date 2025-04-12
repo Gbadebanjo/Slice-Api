@@ -15,6 +15,7 @@ export class ProductDto {
     type: String,
     description: 'Product name',
     required: true,
+    example: 'Suitcase',
   })
   name: string;
 
@@ -22,6 +23,7 @@ export class ProductDto {
     type: String,
     description: 'Product price',
     required: true,
+    example: 290,
   })
   price: number;
 
@@ -46,6 +48,7 @@ export class ProductDto {
     enum: Object.values(AppCategories),
     maxLength: 1,
     maximum: 1,
+    example: Object.values(AppCategories),
   })
   category: string[];
 
@@ -53,6 +56,7 @@ export class ProductDto {
     type: [String],
     description: 'Available color variations',
     required: false,
+    example: ['red', 'blue', 'green'],
   })
   colorVariations?: string[];
 

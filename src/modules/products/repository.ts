@@ -26,7 +26,8 @@ export class ProductRepository {
           },
         ],
       })
-      .lean();
+      .lean()
+      .sort({ createdAt: -1 });
   }
 
   public async findAll(): Promise<Product[]> {
