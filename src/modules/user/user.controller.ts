@@ -1,7 +1,7 @@
 // External dependencies
 import * as bcrypt from 'bcryptjs';
 import { ApiBearerAuth, ApiOkResponse, ApiTags } from '@nestjs/swagger';
-import { Body, Controller, Get, HttpCode, Logger, Post, Put, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, Logger, Post, Put, UseGuards, UseInterceptors } from '@nestjs/common';
 
 // Internal dependencies
 import { GetProfileResDto } from './dtos';
@@ -140,6 +140,16 @@ export class UserController {
       profile,
     };
   }
+
+  // @HttpCode(200)
+  // @ApiOkResponse({
+  //   type: ProfileResDto,
+  // })
+  // @Post('profile/picture/upload')
+  // @UseInterceptors(FileInterceptor('file'))
+  // async uploadProfilePicture(@GetUser() user: UserDocument, @Body()){
+
+  // }
 }
 
 // @ApiBearerAuth()

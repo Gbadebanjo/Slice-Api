@@ -1,6 +1,7 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { ApiProperty } from '@nestjs/swagger';
 import { HydratedDocument, Types } from 'mongoose';
+import { AppCategories } from 'src/shared/enums';
 
 @Schema({
   timestamps: true,
@@ -30,10 +31,14 @@ export class Store {
   @ApiProperty({
     description: 'Categories of the store',
     example: ['Electronics', 'Books'],
+    enum() {
+      return Object.values(AppCategories);
+    },
   })
   @Prop({
     required: true,
     type: [String],
+    enum: Object.values(AppCategories),
   })
   categories: string[];
 

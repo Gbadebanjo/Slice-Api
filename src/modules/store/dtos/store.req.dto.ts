@@ -1,9 +1,11 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { AppCategories } from 'src/shared/enums';
 
 export class StoreReqDto {
   @ApiProperty({
     description: 'Categories of the store',
     example: ['Electronics', 'Books'],
+    enum: Object.values(AppCategories),
   })
   categories: string[];
 

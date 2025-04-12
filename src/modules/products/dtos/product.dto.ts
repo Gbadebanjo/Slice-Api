@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Types } from 'mongoose';
+import { AppCategories } from 'src/shared/enums';
 import { Identifier } from 'src/shared/types';
 
 export class ProductDto {
@@ -42,6 +43,9 @@ export class ProductDto {
     type: [String],
     description: 'Product categories',
     required: true,
+    enum: Object.values(AppCategories),
+    maxLength: 1,
+    maximum: 1,
   })
   category: string[];
 

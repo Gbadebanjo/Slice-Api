@@ -32,3 +32,14 @@ export enum UserTypes {
   admin = 'admin',
   buyer = 'buyer',
 }
+
+export enum AppCategories {
+  fashion = 'Fashion',
+  electronics = 'Electronics',
+  beauty = 'Beauty',
+  homeAndLiving = 'Home & Living',
+  billsAndUtilities = 'Bills & Utilities',
+  autos = 'Autos',
+  toys = 'Toys',
+  sports = 'Sports',
+}
