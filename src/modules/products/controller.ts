@@ -102,9 +102,15 @@ export class ProductController {
     }
 
     const newProduct = {
-      ...product,
+      ...(product as any).toObject(),
       ratings: product.likes.length > 0 ? product.likes.length : Math.floor(Math.random() * 5) + 1,
       price: product.discountAvailable ? product.price - (product.price * product.discountValue) / 100 : product.price,
+      store: {
+        storeName: product.store.profile.storeName,
+        about: product.store.about,
+        storeLogo: product.store.storelogo,
+        rating: Math.floor(Math.random() * 5) + 2,
+      },
     };
 
     return {
@@ -126,10 +132,19 @@ export class ProductController {
       throw BadRequestException.RESOURCE_NOT_FOUND('Stores not found');
     }
 
+    const newStores = stores.map((store: any) => {
+      return {
+        storeName: store.profile.storeName,
+        storeLogo: store.storelogo,
+        rating: Math.floor(Math.random() * 5) + 2,
+        storeId: store._id,
+      };
+    });
+
     return {
       success: true,
       message: 'Stores Found',
-      stores,
+      stores: newStores as any,
     };
   }
 
@@ -139,7 +154,7 @@ export class ProductController {
     type: GetProductResDto,
   })
   @Get('store/:storeId/products')
-  async getProductsByStoreId(@Param('storeId') storeId: string): Promise<GetProductResDto & { products: ProductDto[] }> {
+  async getProductsByStoreId(@Param('storeId') storeId: string): Promise<GetProductResDto & { products: ProductDto[]; store: any }> {
     const products = await this.productQueryService.getProductsByStoreId(storeId);
     if (!products) {
       throw BadRequestException.RESOURCE_NOT_FOUND('Products not found');
@@ -153,12 +168,29 @@ export class ProductController {
         price: product.discountAvailable ? product.price - (product.price * product.discountValue) / 100 : product.price,
         initialPrice: product.price,
       };
+
+      // return {
+      //   name: product.name,
+      //   ratings: product.likes.length > 0 ? product.likes.length : Math.floor(Math.random() * 5) + 1,
+      //   price: product.discountAvailable ? product.price - (product.price * product.discountValue) / 100 : product.price,
+      //   initialPrice: product.price,
+      //   images: product.images,
+      //   description: product.description,
+      //   productId: product._id,
+      // };
     });
 
     return {
       success: true,
       message: 'Products Found',
-      products: newProducts,
+      products: newProducts as any,
+      store: {
+        storeName: (products[0].store as any).profile.storeName,
+        description: (products[0].store as any).profile.storeDescription,
+        storeId: (products[0].store as any)._id,
+        storeLogo: (products[0].store as any).storelogo,
+        rating: Math.floor(Math.random() * 5) + 2,
+      },
     };
   }
 

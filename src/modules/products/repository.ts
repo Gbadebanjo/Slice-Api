@@ -50,10 +50,16 @@ export class ProductRepository {
     return this.ProductModel.findById(new mongoose.Types.ObjectId(id))
       .populate({
         path: 'store',
-        populate: {
-          path: 'profile',
-          select: 'storeName storeDescription phoneNumber',
-        },
+        populate: [
+          {
+            path: 'profile',
+            select: 'storeName storeDescription phoneNumber',
+          },
+          {
+            path: 'about',
+            select: 'abouts',
+          },
+        ],
       })
       .exec();
   }
