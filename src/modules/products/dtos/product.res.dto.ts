@@ -29,7 +29,7 @@ export class ProductResDto {
     description: 'Product image URL',
     required: true,
   })
-  image: string;
+  images: string;
 
   @ApiProperty({
     description: 'Store Details',
@@ -81,4 +81,29 @@ export class ProductResDto {
     required: true,
   })
   description: string;
+
+  @ApiProperty({
+    description: 'The holding period of the product in days',
+    example: 30,
+  })
+  holdingPeriod?: number;
+
+  @ApiProperty({
+    description: 'Indicates if a discount is available for the product',
+    example: true,
+  })
+  discountAvailable?: boolean;
+
+  @ApiProperty({
+    description: 'The discount value in percentage',
+    example: 15,
+  })
+  discountValue?: number;
+
+  @ApiProperty({
+    type: [String],
+    description: 'Array of user IDs who liked the product',
+    required: false,
+  })
+  likes?: string[];
 }

@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { DatabaseCollectionNames, DatabaseModelNames } from 'src/shared/enums';
+import { CloudinaryModule } from 'src/cloudinary/cloudinary.module';
 import { StoreSchema } from './schema';
 import { MailerModule } from '../mailer/mailer.module';
 import { ProfileModule } from '../profile/module';
@@ -52,6 +53,7 @@ import { AboutModule } from '../about/module';
     ProfileModule,
     ProductModule,
     AboutModule,
+    CloudinaryModule,
   ],
   controllers: [StoreController],
   providers: [StoreQueryService, StoreRepository],

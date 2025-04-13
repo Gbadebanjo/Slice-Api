@@ -1,5 +1,21 @@
-import { Body, Controller, Get, HttpCode, Logger, Param, Post, Put, UseGuards } from '@nestjs/common';
-import { ApiBearerAuth, ApiOkResponse, ApiTags } from '@nestjs/swagger';
+import {
+  Body,
+  Controller,
+  Get,
+  HttpCode,
+  Logger,
+  Param,
+  Post,
+  Put,
+  UploadedFile,
+  UploadedFiles,
+  UseGuards,
+  UseInterceptors,
+} from '@nestjs/common';
+import { ApiBearerAuth, ApiBody, ApiConsumes, ApiOkResponse, ApiTags } from '@nestjs/swagger';
+import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
+import { UploadService } from 'src/cloudinary/cloudinary.service';
+import { AppCategories } from 'src/shared/enums';
 import { BadRequestException } from 'src/exceptions';
 import { JwtUserAuthGuard } from '../auth/guards/jwt-user-auth.guard';
 import { StoreQueryService } from './query.service';
@@ -27,6 +43,7 @@ export class StoreController {
     private readonly pofileQueryService: ProfileQueryService,
     private readonly productQueryService: ProductQueryService,
     private readonly aboutQueryService: AboutQueryService,
+    private readonly uploadService: UploadService,
   ) {}
 
   private readonly logger = new Logger(StoreController.name);
@@ -60,15 +77,57 @@ export class StoreController {
   @ApiOkResponse({
     type: GetStoreResDto,
   })
+  @ApiConsumes('multipart/form-data')
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        categories: {
+          type: 'array',
+          items: { type: 'string' },
+          example: ['Fashion'],
+          enum: Object.values(AppCategories),
+        },
+        storelogo: {
+          type: 'string',
+          format: 'binary',
+        },
+      },
+    },
+  })
   @Post('create')
-  async createStore(@GetUser() user: UserDocument, @Body() store: StoreReqDto): Promise<GetStoreResDto & { store: Store }> {
+  @UseInterceptors(FileInterceptor('storelogo'))
+  async createStore(
+    @GetUser() user: UserDocument,
+    @Body() store: StoreReqDto,
+    @UploadedFile() storelogo: Express.Multer.File,
+  ): Promise<GetStoreResDto & { store: Store }> {
     this.logger.log(`User ${user.email} is creating store`);
     const profile = await this.pofileQueryService.getProfileByUserId(user._id);
     if (!profile) {
       throw BadRequestException.RESOURCE_NOT_FOUND('Profile not found');
     }
 
-    const storeBody = { ...store, profile: profile._id };
+    console.log('Store:', store);
+
+    if (!store.categories) {
+      throw BadRequestException.RESOURCE_NOT_FOUND('Invalid categories provided');
+    }
+
+    if (typeof store.categories === 'string') {
+      store.categories = (store.categories as string).split(',').map((category) => category.trim());
+    }
+
+    if (!store.categories.every((category) => Object.values(AppCategories).includes(category as AppCategories))) {
+      throw BadRequestException.RESOURCE_NOT_FOUND('Invalid categories provided');
+    }
+    if (!storelogo) {
+      throw BadRequestException.RESOURCE_NOT_FOUND('No store logo found');
+    }
+
+    const storelogoUrl = await this.uploadService.uploadImage(storelogo);
+
+    const storeBody = { ...store, profile: profile._id, storelogo: storelogoUrl.secure_url };
 
     const newStore = await this.storeQueryDervice.createStore(storeBody);
     return {
@@ -106,14 +165,102 @@ export class StoreController {
   @ApiOkResponse({
     type: GetStoreResDto,
   })
+  @ApiConsumes('multipart/form-data')
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        name: { type: 'string', example: 'Suitcase' },
+        price: { type: 'number', example: 290 },
+        category: {
+          type: 'array',
+          items: { type: 'string' },
+          example: ['Fashion'],
+        },
+        colorVariations: {
+          type: 'array',
+          items: { type: 'string' },
+          example: ['red', 'blue'],
+        },
+        description: { type: 'string' },
+        holdingPeriod: {
+          type: 'number',
+          example: 30,
+          description: 'The holding period of the product in days',
+        },
+        discountAvailable: {
+          type: 'boolean',
+          example: true,
+          description: 'Indicates if a discount is available for the product',
+        },
+        discountValue: {
+          type: 'number',
+          example: 15,
+          description: 'The discount value in percentage',
+          minimum: 0,
+          maximum: 100,
+        },
+        images: {
+          type: 'array',
+          items: {
+            type: 'string',
+            format: 'binary',
+          },
+          maxItems: 5,
+        },
+      },
+    },
+  })
   @Post('product')
-  async createProduct(@GetUser() user: UserDocument, @Body() product: ProductDto): Promise<GetStoreResDto & { product: Product }> {
+  @UseInterceptors(FilesInterceptor('images'))
+  async createProduct(
+    @GetUser() user: UserDocument,
+    @Body() product: ProductDto,
+    @UploadedFiles() images: Express.Multer.File[],
+  ): Promise<GetStoreResDto & { product: Product }> {
     const store = await this.storeQueryDervice.getStore(user._id);
     if (!store) {
       throw BadRequestException.RESOURCE_NOT_FOUND('Store not found');
     }
 
-    const newProduct = await this.productQueryService.createProduct(store._id, product);
+    if (!images || images.length === 0) {
+      throw BadRequestException.RESOURCE_NOT_FOUND('No images found');
+    }
+
+    if (images.length > 5) {
+      throw BadRequestException.RESOURCE_NOT_FOUND('Maximum 5 images allowed');
+    }
+
+    const imageUrls = await Promise.all(
+      images.map(async (image) => {
+        if (image.size > 10 * 1024 * 1024) {
+          throw BadRequestException.RESOURCE_NOT_FOUND('Image size exceeds 5MB limit');
+        }
+
+        if (
+          image.mimetype !== 'image/jpeg' &&
+          image.mimetype !== 'image/png' &&
+          image.mimetype !== 'image/jpg' &&
+          image.mimetype !== 'image/webp'
+        ) {
+          throw BadRequestException.RESOURCE_NOT_FOUND('Invalid image format. Only JPEG, JPG, Webp and PNG are allowed');
+        }
+        const result = await this.uploadService.uploadImage(image);
+        return result.secure_url;
+      }),
+    );
+
+    if (typeof product.category === 'string') {
+      product.category = (product.category as string).split(',').map((category) => category.trim());
+    }
+
+    const productData = { ...product, images: imageUrls };
+
+    if (productData.category.length > 1) {
+      throw BadRequestException.RESOURCE_NOT_FOUND('Only one category allowed');
+    }
+
+    const newProduct = await this.productQueryService.createProduct(store._id, productData);
     return {
       success: true,
       message: 'Product Created',

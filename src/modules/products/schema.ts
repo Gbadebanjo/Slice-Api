@@ -43,7 +43,37 @@ export class Product {
   @Prop({
     required: true,
   })
-  image: string[];
+  images: string[];
+
+  @ApiProperty({
+    description: 'The holding period of the product in days',
+    example: 30,
+  })
+  @Prop({
+    required: false,
+  })
+  holdingPeriod?: number;
+
+  @ApiProperty({
+    description: 'Indicates if a discount is available for the product',
+    example: true,
+  })
+  @Prop({
+    required: false,
+    default: false,
+  })
+  discountAvailable?: boolean;
+
+  @ApiProperty({
+    description: 'The discount value in percentage',
+    example: 15,
+  })
+  @Prop({
+    required: false,
+    min: 0,
+    max: 100,
+  })
+  discountValue?: number;
 
   @ApiProperty({
     description: 'The store reference of the product',

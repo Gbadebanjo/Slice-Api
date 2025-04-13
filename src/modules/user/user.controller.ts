@@ -159,14 +159,14 @@ export class UserController {
   })
   @Post('upload-picture')
   @UseInterceptors(FileInterceptor('file'))
-  @ApiConsumes('multipart/form-data') // 👈 Tells Swagger it accepts multipart
+  @ApiConsumes('multipart/form-data')
   @ApiBody({
     schema: {
       type: 'object',
       properties: {
         file: {
           type: 'string',
-          format: 'binary', // 👈 Required for file uploads
+          format: 'binary',
         },
       },
     },

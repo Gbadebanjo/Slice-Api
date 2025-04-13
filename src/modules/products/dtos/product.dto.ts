@@ -1,7 +1,7 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiHideProperty, ApiProperty } from '@nestjs/swagger';
 import { Types } from 'mongoose';
 import { AppCategories } from 'src/shared/enums';
-import { Identifier } from 'src/shared/types';
+// import { Identifier } from 'src/shared/types';
 
 export class ProductDto {
   @ApiProperty({
@@ -30,16 +30,16 @@ export class ProductDto {
   @ApiProperty({
     type: String,
     description: 'Product image URLs',
-    required: true,
+    required: false,
   })
-  image: string[];
+  images: string[];
 
-  //   @ApiProperty({
-  //     type: Types.ObjectId,
-  //     description: 'Store reference',
-  //     required: false,
-  //   })
-  store?: Identifier;
+  // @ApiProperty({
+  //   type: Types.ObjectId,
+  //   description: 'Store reference',
+  //   required: false,
+  // })
+  // store?: Identifier;
 
   @ApiProperty({
     type: [String],
@@ -66,4 +66,25 @@ export class ProductDto {
     required: true,
   })
   description: string;
+
+  @ApiProperty({
+    description: 'The holding period of the product in days',
+    example: 30,
+  })
+  holdingPeriod?: number;
+
+  @ApiProperty({
+    description: 'Indicates if a discount is available for the product',
+    example: true,
+  })
+  discountAvailable?: boolean;
+
+  @ApiProperty({
+    description: 'The discount value in percentage',
+    example: 15,
+  })
+  discountValue?: number;
+
+  @ApiHideProperty()
+  ratings?: number;
 }

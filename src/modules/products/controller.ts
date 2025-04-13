@@ -28,10 +28,17 @@ export class ProductController {
   async getProducts(): Promise<GetProductResDto & { product: ProductDto }> {
     this.logger.log('Fetching all products');
     const products = await this.productQueryService.getProductsWithStore();
+
+    const newProducts = products.map((product) => {
+      return {
+        ...product,
+        ratings: product.likes.length > 0 ? product.likes.length : Math.floor(Math.random() * 5) + 1,
+      };
+    });
     return {
       success: true,
       message: 'Products Found',
-      product: products,
+      product: newProducts,
     };
   }
 
@@ -47,10 +54,17 @@ export class ProductController {
       throw BadRequestException.RESOURCE_NOT_FOUND('Products not found');
     }
 
+    const newProducts = products.map((product) => {
+      return {
+        ...product,
+        ratings: product.likes.length > 0 ? product.likes.length : Math.floor(Math.random() * 5) + 1,
+      };
+    });
+
     return {
       success: true,
       message: 'Products Found',
-      products,
+      products: newProducts,
     };
   }
 
@@ -82,10 +96,16 @@ export class ProductController {
       throw BadRequestException.RESOURCE_NOT_FOUND('Product not found');
     }
 
+    const newProduct = {
+      ...product,
+      ratings: product.likes.length > 0 ? product.likes.length : Math.floor(Math.random() * 5) + 1,
+      price: product.discountAvailable ? product.price - (product.price * product.discountValue) / 100 : product.price,
+    };
+
     return {
       success: true,
       message: 'Product Found',
-      product,
+      product: newProduct,
     };
   }
 
@@ -120,10 +140,18 @@ export class ProductController {
       throw BadRequestException.RESOURCE_NOT_FOUND('Products not found');
     }
 
+    const newProducts = products.map((product) => {
+      return {
+        ...product,
+        ratings: product.likes.length > 0 ? product.likes.length : Math.floor(Math.random() * 5) + 1,
+        price: product.discountAvailable ? product.price - (product.price * product.discountValue) / 100 : product.price,
+      };
+    });
+
     return {
       success: true,
       message: 'Products Found',
-      products,
+      products: newProducts,
     };
   }
 
@@ -138,10 +166,18 @@ export class ProductController {
       throw BadRequestException.RESOURCE_NOT_FOUND('Products not found');
     }
 
+    const newProducts = products.map((product) => {
+      return {
+        ...product,
+        ratings: product.likes.length > 0 ? product.likes.length : Math.floor(Math.random() * 5) + 1,
+        price: product.discountAvailable ? product.price - (product.price * product.discountValue) / 100 : product.price,
+      };
+    });
+
     return {
       success: true,
       message: 'Products',
-      products,
+      products: newProducts,
     };
   }
 }
