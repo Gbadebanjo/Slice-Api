@@ -30,9 +30,12 @@ export class ProductController {
     const products = await this.productQueryService.getProductsWithStore();
 
     const newProducts = products.map((product) => {
+      const { store, ...productData } = product;
       return {
-        ...product,
+        ...productData,
         ratings: product.likes.length > 0 ? product.likes.length : Math.floor(Math.random() * 5) + 1,
+        price: product.discountAvailable ? product.price - (product.price * product.discountValue) / 100 : product.price,
+        initialPrice: product.price,
       };
     });
     return {
@@ -58,6 +61,8 @@ export class ProductController {
       return {
         ...product,
         ratings: product.likes.length > 0 ? product.likes.length : Math.floor(Math.random() * 5) + 1,
+        price: product.discountAvailable ? product.price - (product.price * product.discountValue) / 100 : product.price,
+        initialPrice: product.price,
       };
     });
 
@@ -141,10 +146,12 @@ export class ProductController {
     }
 
     const newProducts = products.map((product) => {
+      const { store, ...productData } = product;
       return {
-        ...product,
+        ...productData,
         ratings: product.likes.length > 0 ? product.likes.length : Math.floor(Math.random() * 5) + 1,
         price: product.discountAvailable ? product.price - (product.price * product.discountValue) / 100 : product.price,
+        initialPrice: product.price,
       };
     });
 
@@ -167,8 +174,9 @@ export class ProductController {
     }
 
     const newProducts = products.map((product) => {
+      const { store, ...productData } = product;
       return {
-        ...product,
+        ...productData,
         ratings: product.likes.length > 0 ? product.likes.length : Math.floor(Math.random() * 5) + 1,
         price: product.discountAvailable ? product.price - (product.price * product.discountValue) / 100 : product.price,
       };
