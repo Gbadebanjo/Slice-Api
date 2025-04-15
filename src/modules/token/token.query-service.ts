@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { Identifier } from 'src/shared/types';
 import { InternalServerErrorException } from '../../exceptions/internal-server-error.exception';
 
 import { Token } from './token.schema';
@@ -38,7 +39,7 @@ export class TokenQueryService {
     }
   }
 
-  async findAToken(tokenIfo: Token): Promise<Token> {
+  async findAToken(tokenIfo: Partial<Token>): Promise<Token> {
     try {
       return await this.tokenRepository.findOne({
         userId: tokenIfo.userId,
@@ -53,6 +54,14 @@ export class TokenQueryService {
   async findById(tokenId: string): Promise<Token> {
     try {
       return await this.tokenRepository.findById(tokenId);
+    } catch (error) {
+      throw InternalServerErrorException.INTERNAL_SERVER_ERROR(error);
+    }
+  }
+
+  async deleteToken(tokenId: Identifier): Promise<Token> {
+    try {
+      return await this.tokenRepository.findByIdAndDelete(tokenId);
     } catch (error) {
       throw InternalServerErrorException.INTERNAL_SERVER_ERROR(error);
     }

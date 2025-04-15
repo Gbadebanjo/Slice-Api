@@ -105,12 +105,14 @@ export class ProductController {
       ...(product as any).toObject(),
       ratings: product.likes.length > 0 ? product.likes.length : Math.floor(Math.random() * 5) + 1,
       price: product.discountAvailable ? product.price - (product.price * product.discountValue) / 100 : product.price,
-      store: {
-        storeName: product.store.profile.storeName,
-        about: product.store.about,
-        storeLogo: product.store.storelogo,
-        rating: Math.floor(Math.random() * 5) + 2,
-      },
+      store: product.store
+        ? {
+            storeName: product.store.profile.storeName,
+            about: product.store.about,
+            storeLogo: product.store.storelogo,
+            rating: Math.floor(Math.random() * 5) + 2,
+          }
+        : null,
     };
 
     return {
@@ -133,12 +135,14 @@ export class ProductController {
     }
 
     const newStores = stores.map((store: any) => {
-      return {
-        storeName: store.profile.storeName,
-        storeLogo: store.storelogo,
-        rating: Math.floor(Math.random() * 5) + 2,
-        storeId: store._id,
-      };
+      return store
+        ? {
+            storeName: store.profile.storeName,
+            storeLogo: store.storelogo,
+            rating: Math.floor(Math.random() * 5) + 2,
+            storeId: store._id,
+          }
+        : null;
     });
 
     return {
@@ -184,13 +188,15 @@ export class ProductController {
       success: true,
       message: 'Products Found',
       products: newProducts as any,
-      store: {
-        storeName: (products[0].store as any).profile.storeName,
-        description: (products[0].store as any).profile.storeDescription,
-        storeId: (products[0].store as any)._id,
-        storeLogo: (products[0].store as any).storelogo,
-        rating: Math.floor(Math.random() * 5) + 2,
-      },
+      store: products[0].store
+        ? {
+            storeName: (products[0]?.store as any).profile.storeName,
+            description: (products[0]?.store as any).profile.storeDescription,
+            storeId: (products[0].store as any)._id,
+            storeLogo: (products[0].store as any).storelogo,
+            rating: Math.floor(Math.random() * 5) + 2,
+          }
+        : null,
     };
   }
 

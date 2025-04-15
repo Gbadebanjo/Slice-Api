@@ -124,6 +124,8 @@ export class AuthService {
 
     await this.userQueryService.updateById(user._id, user);
 
+    await this.tokenQueryService.deleteToken(findToken._id);
+
     return {
       success: true,
       message: successMsg || 'Email verified successfully',
@@ -342,7 +344,6 @@ export class AuthService {
         userId: user._id,
         type: 'registration',
         userType: user.accountType,
-        value: '', // Just dummy not to break the code
       });
 
       if (!findToken) {
@@ -351,7 +352,7 @@ export class AuthService {
         await this.tokenQueryService.create({
           value: token,
           type: 'registration',
-          userType: 'user',
+          userType: user.accountType,
           userId: user._id,
           expiresIn: new Date(Date.now() + Constants.tokenExpiry),
         });
