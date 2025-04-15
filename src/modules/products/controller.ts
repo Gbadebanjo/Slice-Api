@@ -105,7 +105,7 @@ export class ProductController {
       ...(product as any).toObject(),
       ratings: product.likes.length > 0 ? product.likes.length : Math.floor(Math.random() * 5) + 1,
       price: product.discountAvailable ? product.price - (product.price * product.discountValue) / 100 : product.price,
-      store: product.store
+      store: product?.store
         ? {
             storeName: product.store.profile.storeName,
             about: product.store.about,
@@ -188,7 +188,7 @@ export class ProductController {
       success: true,
       message: 'Products Found',
       products: newProducts as any,
-      store: products[0].store
+      store: products[0]?.store
         ? {
             storeName: (products[0]?.store as any).profile.storeName,
             description: (products[0]?.store as any).profile.storeDescription,
